@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import LayoutEmailGenerator from '../Components/EmailInput';
-import EmailOutput from '../Components/OutputEmailGenerator';
+import React, { useState } from "react";
+import LayoutEmailGenerator from "../Components/EmailInput";
+import EmailOutput from "../Components/OutputEmailGenerator";
 
 const SmartEmailGenerator = () => {
-  const [emailType, setEmailType] = useState('Thank You');
-  const [emailTone, setEmailTone] = useState('Friendly');
-  const [keywords, setKeywords] = useState('');
+  const [emailType, setEmailType] = useState("Thank You");
+  const [emailTone, setEmailTone] = useState("Friendly");
+  const [keywords, setKeywords] = useState("");
   const [emailList, setEmailList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
 
-  const API_KEY = 'AIzaSyB-tNhZhsObpWwFWyX04YXr0Aq7sQQ_5GA';
+  const API_KEY = "AIzaSyB-tNhZhsObpWwFWyX04YXr0Aq7sQQ_5GA";
   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
   const generateEmail = async () => {
     if (!keywords) {
-      alert('⚠️ Please enter keywords or an idea for the email');
+      alert("⚠️ Please enter keywords or an idea for the email");
       return;
     }
 
     try {
-      const prompt = `Compose a ${emailTone} ${emailType} email focusing on: ${keywords}.`;
+      const prompt = `Compose a ${emailTone} ${emailType} email focusing on: ${keywords}. Keep the email concise and to the point,Make sure the message is clear and actionable.`;
 
       const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
       });
 
       const data = await response.json();
@@ -37,11 +37,11 @@ const SmartEmailGenerator = () => {
         setEmailList(newEmailList);
         setCurrentIndex(newEmailList.length - 1);
       } else {
-        alert('Failed to generate email.');
+        alert("Failed to generate email.");
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error generating email.');
+      console.error("Error:", error);
+      alert("Error generating email.");
     }
   };
 
@@ -60,20 +60,19 @@ const SmartEmailGenerator = () => {
   const copyToClipboard = () => {
     if (emailList[currentIndex]) {
       navigator.clipboard.writeText(emailList[currentIndex]);
-      alert('Copied to clipboard!');
+      alert("Copied to clipboard!");
     }
   };
 
   const resetAll = () => {
     setEmailList([]);
     setCurrentIndex(-1);
-    setKeywords('');
-    alert('Reset Successful!');
+    setKeywords("");
+    alert("Reset Successful!");
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start p-6 space-y-6">
-
       {/* If no email generated yet, center the input form */}
       {emailList.length === 0 ? (
         <div className="w-full max-w-2xl">
@@ -118,7 +117,6 @@ const SmartEmailGenerator = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };
